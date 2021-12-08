@@ -1,0 +1,97 @@
+body {
+  font-family: "Roboto Condensed", sans-serif;
+  background: #252525;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 32px;
+  color: #fff;
+  user-select: none;
+  position: relative;
+}
+
+.title {
+  display: flex;
+  margin: 0 0 20px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-transform: uppercase;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.title.title-options {
+  gap: 10px;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+label {
+  margin-left: 50px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+label input[type="checkbox"] {
+  display: none;
+}
+
+label span {
+  position: relative;
+  font-size: 16px;
+}
+
+label input[type="checkbox"] + span::before {
+  content: " ";
+  display: block;
+  box-sizing: border-box;
+  height: 18px;
+  width: 36px;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  position: absolute;
+  top: 0;
+  left: -50px;
+}
+
+label input[type="checkbox"] + span::after {
+  content: " ";
+  display: block;
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  position: absolute;
+  top: -2px;
+  left: -51px;
+  background: #ff686b;
+  transition: background, left 0.3s ease-in;
+}
+
+label input[type="checkbox"]:checked + span::after {
+  left: -35px;
+  background: #0f0;
+  transition: background, left 0.3s ease-in;
+}
+
+label input[type="checkbox"]:disabled + span::before,
+label input[type="checkbox"]:disabled + span::after,
+label input[type="checkbox"]:disabled + span {
+  opacity: 0.2;
+}
+
+.made-with-love {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.made-with-love img {
+  width: 20px;
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Youtube likes/views ratio",
+  "description": "Displays likes to views ratio on youtube videos.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "contentScripts/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["contentScripts/youtube.js"]
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabCapture",
+    "storage",
+    "webRequest",
+    "tabs",
+    "webNavigation"
+  ],
+  "action": {
+    "default_popup": "popupView/index.html",
+    "default_icon": {
+      "16": "/images/youtube_16.png",
+      "32": "/images/youtube_32.png",
+      "48": "/images/youtube_64.png",
+      "128": "/images/youtube_128.png"
+    }
+  },
+  "icons": {
+    "16": "/images/youtube_16.png",
+    "32": "/images/youtube_32.png",
+    "48": "/images/youtube_64.png",
+    "128": "/images/youtube_128.png"
+  },
+  "options_page": "optionsView/index.html"
+}
