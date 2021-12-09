@@ -16,15 +16,15 @@ function onNewVideo(url) {
   )
     .then((x) => x.json())
     .then(async (x) => {
-      const { viewCount, likeCount } = x.items[0].statistics;
-      const { status, ratio } = getVideoRatio(viewCount, likeCount);
+      const { commentCount, likeCount } = x.items[0].statistics;
+      const { status, ratio } = getVideoRatio(commentCount, likeCount);
 
       await replaceDislikeButton(ratio, status);
     });
 }
 
-const getVideoRatio = (viewCount, likeCount) => {
-  if (viewCount < 1000 || likeCount < 50) {
+const getVideoRatio = (commentCount, likeCount) => {
+  if (commentCount < 10 || likeCount < 50) {
     return {
       status: "not_enough_data",
     };
@@ -32,7 +32,7 @@ const getVideoRatio = (viewCount, likeCount) => {
 
   return {
     status: "ok",
-    ratio: ((likeCount / viewCount) * 1000).toFixed(2),
+    ratio: Math.max(Math.min(+(0.567092 + Math.log(likeCount / commentCount) * 0.102449).toFixed(2), 1), 0)
   };
 };
 
@@ -65,20 +65,19 @@ const fillDislikeButtonIfExists = (ratio, status) => {
   dislikeButton.style.width = "120px";
   dislikeButton.style.marginBottom = "4px";
 
-  const ratioText = status === "ok" ? `${ratio}‰` : "N/A";
+  const ratioText = status === "ok" ? `${ratio * 100}%` : "N/A";
   dislikeButton.innerHTML = `<span>Ratio: ${ratioText}</span>`;
 
   chrome.storage.sync.get("isBarEnabled", ({ isBarEnabled }) => {
-    isBarEnabled && !!ratio && createRatioBar(dislikeButton, +ratio);
+    isBarEnabled && !!ratio && createRatioBar(dislikeButton, ratio);
   });
 
   return true;
 };
 
 const createRatioBar = (dislikeButton, ratio) => {
-  const barColor = ratio > 10 ? "green" : ratio > 2 ? "yellow" : "red";
-  const barWidth =
-    ratio > 50 ? 120 : ratio > 10 ? 90 : ratio > 5 ? 60 : ratio > 2 ? 30 : 15;
+  const barColor = ratio > 0.8 ? "green" : ratio > 0.6 ? "yellow" : "red";
+  const barWidth = 120 * ratio;
 
   const ratioBar = `<span style="\
     width: ${barWidth}px; \
