@@ -1,18 +1,18 @@
-const YOUR_API_KEY = "<your-api-key>";
-
 chrome.runtime.onMessage.addListener((request) => {
   if (request.message === "NEW_VIDEO") {
     chrome.storage.sync.get("isEnabled", ({ isEnabled }) => {
-      isEnabled && onNewVideo(location.href);
+      chrome.storage.sync.get("apiKey", ({ apiKey }) => {
+        isEnabled && onNewVideo(location.href, apiKey);
+      });
     });
   }
 });
 
-function onNewVideo(url) {
+function onNewVideo(url, userApiKey) {
   const id = new URL(url).searchParams.get("v");
 
   fetch(
-    `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${id}&key=${YOUR_API_KEY}`
+    `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${id}&key=${userApiKey}`
   )
     .then((x) => x.json())
     .then(async (x) => {
@@ -20,25 +20,27 @@ function onNewVideo(url) {
       const { status, ratio } = getVideoRatio(commentCount, likeCount);
 
       await replaceDislikeButton(ratio, status);
+    })
+    .catch(async () => {
+      await replaceDislikeButton(-1, "error");
     });
 }
 
 const getVideoRatio = (commentCount, likeCount) => {
-  if (commentCount < 10 || likeCount < 50) {
+  if (!commentCount || commentCount < 10 || likeCount < 50) {
     return {
       status: "not_enough_data",
     };
   }
 
+  const calculatedApproxRatio = +(
+    0.567092 +
+    Math.log(likeCount / commentCount) * 0.102449
+  ).toFixed(2);
+
   return {
     status: "ok",
-    ratio: Math.max(
-      Math.min(
-        +(0.567092 + Math.log(likeCount / commentCount) * 0.102449).toFixed(2),
-        1
-      ),
-      0
-    ),
+    ratio: Math.max(Math.min(calculatedApproxRatio, 1), 0),
   };
 };
 
@@ -71,11 +73,15 @@ const fillDislikeButtonIfExists = (ratio, status) => {
   dislikeButton.style.width = "120px";
   dislikeButton.style.marginBottom = "4px";
 
-  const ratioText = status === "ok" ? `${ratio * 100}%` : "N/A";
+  const ratioText =
+    {
+      ok: `${ratio * 100}%`,
+      error: "Error",
+    }[status] || "N/A";
   dislikeButton.innerHTML = `<span>Ratio: ${ratioText}</span>`;
 
   chrome.storage.sync.get("isBarEnabled", ({ isBarEnabled }) => {
-    isBarEnabled && !!ratio && createRatioBar(dislikeButton, ratio);
+    isBarEnabled && status === "ok" && createRatioBar(dislikeButton, ratio);
   });
 
   return true;

@@ -82,6 +82,31 @@ label input[type="checkbox"]:disabled + span {
   opacity: 0.2;
 }
 
+label.text-input-label {
+  margin-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.text-input-label input[type="text"] {
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 2px;
+  outline: none;
+  color: white;
+  width: 300px;
+  text-align: center;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.text-input-label a {
+  font-size: 12px;
+  color: white;
+}
+
 .made-with-love {
   position: absolute;
   right: 5px;

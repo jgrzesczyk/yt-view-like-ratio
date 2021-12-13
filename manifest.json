@@ -1,6 +1,6 @@
 {
-  "name": "Youtube likes/views ratio",
-  "description": "Displays likes to views ratio on youtube videos.",
+  "name": "Youtube likes/comments ratio",
+  "description": "Displays likes to comments ratio on youtube videos.",
   "version": "1.0",
   "manifest_version": 3,
   "background": {
