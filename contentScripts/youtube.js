@@ -32,7 +32,13 @@ const getVideoRatio = (commentCount, likeCount) => {
 
   return {
     status: "ok",
-    ratio: Math.max(Math.min(+(0.567092 + Math.log(likeCount / commentCount) * 0.102449).toFixed(2), 1), 0)
+    ratio: Math.max(
+      Math.min(
+        +(0.567092 + Math.log(likeCount / commentCount) * 0.102449).toFixed(2),
+        1
+      ),
+      0
+    ),
   };
 };
 

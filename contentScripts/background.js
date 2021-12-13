@@ -7,3 +7,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     });
   }
 });
+
+chrome.runtime.onInstalled.addListener(function (object) {
+  chrome.tabs.create({
+    url: `chrome-extension://${chrome.runtime.id}/optionsView/index.html`,
+  });
+});
